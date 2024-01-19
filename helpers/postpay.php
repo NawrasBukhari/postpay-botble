@@ -8,12 +8,17 @@ if (! function_exists('showInstallmentTotalPrice')) {
 }
 
 if (! function_exists('checkIfInstallmentsAllowed')) {
+    /**
+     * According to the documentation if you want to disable installments then the value should be 1
+     * @check https://ui.postpay.io/widgets
+     * @return int
+     */
     function checkIfInstallmentsAllowed(): int
     {
-        if (get_payment_setting('number_installments', 'postpay') > 1) {
+        if ((int) get_payment_setting('number_installments', 'postpay') > 1) {
             return get_payment_setting('number_installments', 'postpay');
         } else {
-            return 0;
+            return 1; 
         }
     }
 }
