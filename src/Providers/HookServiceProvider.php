@@ -115,6 +115,7 @@ class HookServiceProvider extends ServiceProvider
         $firstName = $name[0];
         $lastName = $name[1];
         $uniqueID = $orderId.'-'.uniqid();
+        $customerId = is_null($paymentData['customer_id'] ? random_int(100000, 999999) : $paymentData['customer_id']);
         $shippingAmount = ShippingRule::first()->whereName('Delivery')->first()->price;
         if (count($name) > 2) {
             $lastName = $name[2];
@@ -141,7 +142,7 @@ class HookServiceProvider extends ServiceProvider
                 ],
 
                 'customer' => [
-                    'id' => (string) $paymentData['customer_id'],
+                    'id' => (string) $customerId,
                     'email' => (string) $orderAddress->email,
                     'first_name' => (string) $firstName,
                     'last_name' => (string) $lastName,
