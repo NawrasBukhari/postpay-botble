@@ -1,0 +1,11 @@
+{
+    "id": "nawrasbukhari/postpay",
+    "name": "Postpay Payment Gateway",
+    "namespace": "NawrasBukhari\\Postpay\\",
+    "provider": "NawrasBukhari\\Postpay\\Providers\\PostpayServiceProvider",
+    "author": "Nawras Bukhari",
+    "url": "https://github.com/NawrasBukhari",
+    "version": "1.0.0",
+    "description": "Postpay payment gateway",
+    "require": ["botble/payment"]
+}

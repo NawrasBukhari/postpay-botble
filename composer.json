@@ -1,0 +1,8 @@
+{
+    "name": "nawrasbukhari/postpay",
+    "description": "PostPay Payment Gateway",
+    "type": "package",
+    "require": {
+        "postpay/postpay-php": "^0.1.1"
+    }
+}
