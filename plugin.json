@@ -5,7 +5,7 @@
     "provider": "NawrasBukhari\\Postpay\\Providers\\PostpayServiceProvider",
     "author": "Nawras Bukhari",
     "url": "https://github.com/NawrasBukhari/postpay-botble",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "Postpay payment gateway",
     "require": ["botble/payment"]
 }

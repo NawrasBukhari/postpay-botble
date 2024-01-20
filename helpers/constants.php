@@ -3,3 +3,35 @@
 if (! defined('POSTPAY_PAYMENT_METHOD_NAME')) {
     define('POSTPAY_PAYMENT_METHOD_NAME', 'postpay');
 }
+
+if (! defined('POSTPAY_PAYMENT_SANDBOX_FIELD_NAME')) {
+    define('POSTPAY_PAYMENT_SANDBOX_FIELD_NAME', 'sandbox_enabled');
+}
+
+if (! defined('POSTPAY_PAYMENT_SANDBOX_FIELD_ENABLED')) {
+    define('POSTPAY_PAYMENT_SANDBOX_FIELD_ENABLED', 'enabled');
+}
+
+if (! defined('POSTPAY_PAYMENT_SANDBOX_FIELD_DISABLED')) {
+    define('POSTPAY_PAYMENT_SANDBOX_FIELD_DISABLED', 'disabled');
+}
+
+if (! defined('POSTPAY_PAYMENT_INSTALLMENTS_ALLOWED_FIELD_NAME')) {
+    define('POSTPAY_PAYMENT_INSTALLMENTS_ALLOWED_FIELD_NAME', 'installments_allowed');
+}
+
+if (! defined('POSTPAY_PAYMENT_INSTALLMENTS_ALLOWED_FIELD_NAME_TRUE')) {
+    define('POSTPAY_PAYMENT_INSTALLMENTS_ALLOWED_FIELD_NAME_TRUE', 'true');
+}
+
+if (! defined('POSTPAY_PAYMENT_MERCHANT_ID_FIELD_NAME')) {
+    define('POSTPAY_PAYMENT_MERCHANT_ID_FIELD_NAME', 'merchant_id');
+}
+
+if (! defined('POSTPAY_PAYMENT_SECRET_KEY_FIELD_NAME')) {
+    define('POSTPAY_PAYMENT_SECRET_KEY_FIELD_NAME', 'secret_key');
+}
+
+if (! defined('POSTPAY_PAYMENT_ASSET_SOURCE')) {
+    define('POSTPAY_PAYMENT_ASSET_SOURCE', 'source');
+}

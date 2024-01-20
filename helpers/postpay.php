@@ -11,7 +11,11 @@ use Botble\Theme\Facades\Theme;
 if (! function_exists('checkIfInstallmentsAllowed')) {
     function checkIfInstallmentsAllowed(): int
     {
-        if ((string) get_payment_setting('installments_allowed', POSTPAY_PAYMENT_METHOD_NAME) === 'true') {
+        if ((string)
+            get_payment_setting(
+                key: POSTPAY_PAYMENT_INSTALLMENTS_ALLOWED_FIELD_NAME,
+                type: POSTPAY_PAYMENT_METHOD_NAME
+            ) === POSTPAY_PAYMENT_INSTALLMENTS_ALLOWED_FIELD_NAME_TRUE) {
             return 3;
         } else {
             return 1;
@@ -53,7 +57,7 @@ if (! function_exists('toDecimal')) {
 if (! function_exists('postpayLoadScript')) {
     function postpayLoadScript(): string
     {
-        return Theme::asset()->get(POSTPAY_PAYMENT_METHOD_NAME)['source'] ?? '';
+        return Theme::asset()->get(POSTPAY_PAYMENT_METHOD_NAME)[POSTPAY_PAYMENT_ASSET_SOURCE];
     }
 }
 
@@ -65,6 +69,6 @@ if (! function_exists('postpayLoadScript')) {
 if (! function_exists('postpaySandboxStatus')) {
     function postpaySandboxStatus(): bool
     {
-        return (string) get_payment_setting('sandbox', POSTPAY_PAYMENT_METHOD_NAME) === 'enabled';
+        return (string) get_payment_setting(POSTPAY_PAYMENT_SANDBOX_FIELD_NAME, POSTPAY_PAYMENT_METHOD_NAME) === POSTPAY_PAYMENT_SANDBOX_FIELD_ENABLED;
     }
 }

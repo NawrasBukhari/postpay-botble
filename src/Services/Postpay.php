@@ -19,18 +19,24 @@ class Postpay
      */
     public function postpay(): PostpayBase
     {
-        return new PostpayBase([
-            'merchant_id' => get_payment_setting('merchant_id', POSTPAY_PAYMENT_METHOD_NAME),
-            'secret_key' => get_payment_setting('secret_key', POSTPAY_PAYMENT_METHOD_NAME),
-            'sandbox' => postpaySandboxStatus(),
-        ]);
+        $config = [];
+
+        $config['merchant_id'] = get_payment_setting(key: POSTPAY_PAYMENT_MERCHANT_ID_FIELD_NAME, type: POSTPAY_PAYMENT_METHOD_NAME);
+        $config['secret_key'] = get_payment_setting(key: POSTPAY_PAYMENT_SECRET_KEY_FIELD_NAME, type: POSTPAY_PAYMENT_METHOD_NAME);
+
+        if (postpaySandboxStatus()) {
+            $config['sandbox'] = true;
+        } else {
+            $config['sandbox'] = false;
+        }
+
+        return new PostpayBase($config);
     }
 
     /**
      * @param $parameters array
      *
-     * @throws PostpayException
-     * This function is used to create a checkout
+     * @throws PostpayException This function is used to create a checkout
      *
      * @check https://docs.postpay.io/v1/#checkout
      */
@@ -39,14 +45,13 @@ class Postpay
         $relativeUrl = '/checkouts';
 
         try {
-
-            $checkout = $this->postpay()->post($relativeUrl, $parameters);
+            $checkout = $this->postpay()->post(path: $relativeUrl, params: $parameters);
             if (! $checkout->isError()) {
                 return $checkout->json();
             }
 
             throw new RESTfulException($checkout->json()['fields']);
-        } catch (RESTfulException|PostpayException $exception) {
+        } catch (RESTfulException $exception) {
             $this->setErrorMessage($exception->getMessage());
             throw new PostpayException('[ Error Code: '.$exception->getErrorCode().' - And Message is: '.$exception->getMessage().']');
         }
