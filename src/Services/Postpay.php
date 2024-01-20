@@ -18,8 +18,7 @@ class Postpay
     {
         return new PostpayBase([
             'merchant_id' => get_payment_setting('merchant_id', POSTPAY_PAYMENT_METHOD_NAME),
-            'secret_key' => get_payment_setting('secret_key', POSTPAY_PAYMENT_METHOD_NAME),
-            'sandbox' => '',
+            'secret_key' => get_payment_setting('secret_key', POSTPAY_PAYMENT_METHOD_NAME)
         ]);
     }
 
