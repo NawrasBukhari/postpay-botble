@@ -1,4 +1,5 @@
 @if (get_payment_setting('status', POSTPAY_PAYMENT_METHOD_NAME) == 1)
+    @if ($selecting == POSTPAY_PAYMENT_METHOD_NAME) <script src="{{ postpayLoadScript() }}"></script> @endif
     <span hidden="hidden" type="hidden" id="{{ POSTPAY_PAYMENT_METHOD_NAME }}_payment_method_merchant_id"
           data-postpay-merchant-id="{{ get_payment_setting('merchant_id', POSTPAY_PAYMENT_METHOD_NAME) }}"></span>
     <li class="list-group-item">
@@ -18,7 +19,7 @@
                 <div class="postpay-widget"
                      data-type="payment-summary"
                      data-environment="{{ postpayEnv() }}"
-                     data-amount="{{ showInstallmentTotalPrice($amount) }}"
+                     data-amount="{{ toDecimal($amount) }}"
                      data-currency="{{ $currency }}"
                      data-num-instalments="{{ checkIfInstallmentsAllowed() }}"
                      data-country="AE"

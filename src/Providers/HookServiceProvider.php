@@ -82,7 +82,7 @@ class HookServiceProvider extends ServiceProvider
 
     public function addPaymentSettings(?string $settings): string
     {
-        return $settings . PostpayPaymentMethodForm::create()->renderForm();
+        return $settings.PostpayPaymentMethodForm::create()->renderForm();
     }
 
     public function registerPostpayMethod(?string $html, array $data): string
@@ -113,43 +113,43 @@ class HookServiceProvider extends ServiceProvider
         $name = explode(' ', $orderAddress->name);
         $firstName = $name[0];
         $lastName = $name[1];
-        $uniqueID = $orderId . '-' . uniqid();
+        $uniqueID = $orderId.'-'.uniqid();
         if (count($name) > 2) {
             $lastName = $name[2];
         }
 
         try {
             $params = [
-                'order_id' => (string)$uniqueID,
-                'total_amount' => (float)toDecimal($paymentData['amount']),
-                'currency' => (string)$paymentData['currency'],
-                'tax_amount' => (float)toDecimal($taxAmount),
-                'num_instalments' => (int)$numInstallments,
+                'order_id' => (string) $uniqueID,
+                'total_amount' => (float) toDecimal($paymentData['amount']),
+                'currency' => (string) $paymentData['currency'],
+                'tax_amount' => (float) toDecimal($taxAmount),
+                'num_instalments' => (int) $numInstallments,
                 'shipping' => [
-                    'id' => (string)$uniqueID,
-                    'name' => (string)$paymentData['shipping_method'],
-                    'amount' => (float)toDecimal(40),
+                    'id' => (string) $uniqueID,
+                    'name' => (string) $paymentData['shipping_method'],
+                    'amount' => (float) toDecimal(40),
                     'address' => [
-                        'first_name' => (string)$firstName,
-                        'last_name' => (string)$lastName,
-                        'line1' => (string)$orderAddress->address,
-                        'city' => (string)'Dubai',
-                        'country' => (string)'AE',
+                        'first_name' => (string) $firstName,
+                        'last_name' => (string) $lastName,
+                        'line1' => (string) $orderAddress->address,
+                        'city' => (string) 'Dubai',
+                        'country' => (string) 'AE',
                     ],
                 ],
 
                 'customer' => [
-                    'id' => (string)date('Ymd') . mt_rand(100, 10000),
-                    'email' => (string)$orderAddress->email,
-                    'first_name' => (string)$firstName,
-                    'last_name' => (string)$lastName,
+                    'id' => (string) date('Ymd').mt_rand(100, 10000),
+                    'email' => (string) $orderAddress->email,
+                    'first_name' => (string) $firstName,
+                    'last_name' => (string) $lastName,
                 ],
                 'items' => [
                     [
-                        'reference' => (string)$uniqueID,
-                        'name' => (string)$paymentData['products'][0]['name'],
-                        'unit_price' => (float)toDecimal($paymentData['products'][0]['price']),
-                        'qty' => (int)$paymentData['products'][0]['qty'],
+                        'reference' => (string) $uniqueID,
+                        'name' => (string) $paymentData['products'][0]['name'],
+                        'unit_price' => (float) toDecimal($paymentData['products'][0]['price']),
+                        'qty' => (int) $paymentData['products'][0]['qty'],
                     ],
                 ],
 
@@ -167,18 +167,17 @@ class HookServiceProvider extends ServiceProvider
 
             if ($checkout['redirect_url']) {
                 $data['redirect'] = $checkout['redirect_url'];
-                header('Location: ' . $checkout['redirect_url']);
+                header('Location: '.$checkout['redirect_url']);
             }
 
         } catch (\Exception $e) {
             $data['error'] = true;
-            $data['message'] = $e->getMessage() . ' At File ' . $e->getFile() . ' In Line ' . $e->getLine();
-            \Log::error($e->getMessage() . ' At File ' . $e->getFile() . ' In Line ' . $e->getLine());
+            $data['message'] = $e->getMessage().' At File '.$e->getFile().' In Line '.$e->getLine();
+            \Log::error($e->getMessage().' At File '.$e->getFile().' In Line '.$e->getLine());
 
             return $data;
         }
 
         return $data;
     }
-
 }

@@ -34,8 +34,8 @@ class PostpayController extends BaseController
             }
 
             do_action(PAYMENT_ACTION_PAYMENT_PROCESSED, [
-                'order_id' => (string)$order_id,
-                'status' => (string)PaymentStatusEnum::COMPLETED,
+                'order_id' => (string) $order_id,
+                'status' => (string) PaymentStatusEnum::COMPLETED,
                 'amount' => $capture['total_amount'] / 100,
                 'currency' => $capture['currency'],
                 'charge_id' => $capture['order_id'],

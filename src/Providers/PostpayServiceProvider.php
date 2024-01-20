@@ -5,8 +5,6 @@ namespace NawrasBukhari\Postpay\Providers;
 use Botble\Base\Supports\ServiceProvider;
 use Botble\Base\Traits\LoadAndPublishDataTrait;
 use Botble\Theme\Facades\Theme;
-use Illuminate\Routing\Events\RouteMatched;
-
 
 class PostpayServiceProvider extends ServiceProvider
 {
@@ -21,17 +19,42 @@ class PostpayServiceProvider extends ServiceProvider
             ->loadAndPublishViews()
             ->loadRoutes();
 
-        $this->app->booted(function () {
-            $this->app['events']->listen(RouteMatched::class, function () {
-                if (get_payment_setting('status', POSTPAY_PAYMENT_METHOD_NAME) == 1) {
-                    Theme::asset()
-                        ->container('footer')
-                        ->usePath(false)
-                        ->add('postpay-js', asset('vendor/core/plugins/postpay/js/postpay.js'));
-                }
-            });
-        });
-
         $this->app->register(HookServiceProvider::class);
+
+        if ($this->isActivePlugin(POSTPAY_PAYMENT_METHOD_NAME)) {
+            Theme::asset()
+                ->usePath(false)
+                ->add(POSTPAY_PAYMENT_METHOD_NAME, asset('vendor/core/plugins/postpay/js/postpay.js'));
+        }
+    }
+
+    /**
+     * @return mixed
+     * This function is used to check if the plugin is active or not based on array value
+     */
+    private function getValue(array $haystack, $needle): mixed
+    {
+        return collect($haystack)
+            ->first(function ($value) use ($needle) {
+                if (is_scalar($value) && $value === $needle) {
+                    return true;
+                }
+
+                if (is_array($value) && $this->getValue($value, $needle)) {
+                    return true;
+                }
+
+                return is_object($value) && (string) $value === (string) $needle;
+            });
+    }
+
+    /**
+     * We have a function called get_active_plugins() which return array of active plugins.
+     *
+     * @param  string  $plugin in @Botble CMS
+     */
+    private function isActivePlugin(string $plugin): bool|string
+    {
+        return $this->getValue(get_active_plugins(), $plugin) === $plugin;
     }
 }

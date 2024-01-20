@@ -79,6 +79,17 @@ class PostpayPaymentMethodForm extends PaymentMethodForm
                         'true' => __('Yes'),
                         'false' => __('No'),
                     ])->toArray()
+            )->add(
+                'payment_postpay_sandbox_enabled',
+                'select',
+
+                SelectFieldOption::make()
+                    ->label(__('Sandbox Mode'))
+                    ->helperText(__('Enable sandbox mode to test the payment method.'))
+                    ->choices([
+                        'enabled' => __('Enable Sandbox'),
+                        'disabled' => __('Disable Sandbox'),
+                    ])->toArray()
             );
     }
 }
