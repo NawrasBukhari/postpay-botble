@@ -4,7 +4,6 @@ namespace NawrasBukhari\Postpay\Providers;
 
 use Botble\Base\Facades\BaseHelper;
 use Botble\Base\Facades\Html;
-use Botble\Ecommerce\Repositories\Interfaces\OrderAddressInterface;
 use Botble\Payment\Enums\PaymentMethodEnum;
 use Botble\Payment\Facades\PaymentMethods;
 use Illuminate\Contracts\Container\BindingResolutionException;
@@ -107,13 +106,13 @@ class HookServiceProvider extends ServiceProvider
 
         $orderIds = $paymentData['order_id'];
         $orderId = Arr::first($orderIds);
-        $orderAddress = $this->app->make(OrderAddressInterface::class)->getFirstBy(['order_id' => $orderId]);
+        $orderAddress = $paymentData['address'];
         $taxAmount = 0;
         $numInstallments = checkIfInstallmentsAllowed();
-        $name = explode(' ', $orderAddress->name);
+        $name = explode(' ', $orderAddress['name']);
         $firstName = $name[0];
         $lastName = $name[1];
-        $uniqueID = $orderId.'-'.uniqid();
+        $uniqueID = $orderId . '-' .uniqid();
         if (count($name) > 2) {
             $lastName = $name[2];
         }
@@ -132,7 +131,7 @@ class HookServiceProvider extends ServiceProvider
                     'address' => [
                         'first_name' => (string) $firstName,
                         'last_name' => (string) $lastName,
-                        'line1' => (string) $orderAddress->address,
+                        'line1' => (string) $orderAddress['address'],
                         'city' => (string) 'Dubai',
                         'country' => (string) 'AE',
                     ],
@@ -140,7 +139,7 @@ class HookServiceProvider extends ServiceProvider
 
                 'customer' => [
                     'id' => (string) date('Ymd').mt_rand(100, 10000),
-                    'email' => (string) $orderAddress->email,
+                    'email' => $orderAddress['email'],
                     'first_name' => (string) $firstName,
                     'last_name' => (string) $lastName,
                 ],
@@ -158,7 +157,7 @@ class HookServiceProvider extends ServiceProvider
                     'cancel_url' => $paymentData['return_url'],
                 ],
                 'metadata' => [
-                    'notes' => BaseHelper::clean($request->get('description')),
+                    'notes' => BaseHelper::clean($request->input('description')),
                     'customer_type' => $paymentData['customer_type'],
                 ],
             ];
@@ -167,13 +166,13 @@ class HookServiceProvider extends ServiceProvider
 
             if ($checkout['redirect_url']) {
                 $data['redirect'] = $checkout['redirect_url'];
-                header('Location: '.$checkout['redirect_url']);
+                header('Location: ' . $checkout['redirect_url']);
             }
 
         } catch (\Exception $e) {
             $data['error'] = true;
-            $data['message'] = $e->getMessage().' At File '.$e->getFile().' In Line '.$e->getLine();
-            \Log::error($e->getMessage().' At File '.$e->getFile().' In Line '.$e->getLine());
+            $data['message'] = $e->getMessage() . ' At File ' . $e->getFile() . ' In Line ' . $e->getLine();
+            \Log::error($data['message']);
 
             return $data;
         }
