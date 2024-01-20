@@ -10,15 +10,15 @@ if (! function_exists('showInstallmentTotalPrice')) {
 if (! function_exists('checkIfInstallmentsAllowed')) {
     /**
      * According to the documentation if you want to disable installments then the value should be 1
+     *
      * @check https://ui.postpay.io/widgets
-     * @return int
      */
     function checkIfInstallmentsAllowed(): int
     {
-        if ((int) get_payment_setting('number_installments', 'postpay') > 1) {
-            return get_payment_setting('number_installments', 'postpay');
+        if ((string) get_payment_setting('installments_allowed', POSTPAY_PAYMENT_METHOD_NAME) === 'true') {
+            return 3;
         } else {
-            return 1; 
+            return 1;
         }
     }
 }
@@ -36,5 +36,12 @@ if (! function_exists('toDecimal')) {
     function toDecimal($number): float
     {
         return $number * 100;
+    }
+}
+
+if (!function_exists('postpaySandbox')){
+    function postpaySandbox(): array|string
+    {
+        return app()->environment() === 'production' ? '' : ['sandbox' =>  true];
     }
 }

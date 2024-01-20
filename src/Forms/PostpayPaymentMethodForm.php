@@ -2,6 +2,7 @@
 
 namespace NawrasBukhari\Postpay\Forms;
 
+use Botble\Base\Forms\FieldOptions\SelectFieldOption;
 use Botble\Base\Forms\FieldOptions\TextFieldOption;
 use Botble\Base\Forms\Fields\TextField;
 use Botble\Payment\Forms\PaymentMethodForm;
@@ -69,13 +70,15 @@ class PostpayPaymentMethodForm extends PaymentMethodForm
                     ->value(get_payment_setting('secret_key', 'postpay') ?? '')
                     ->toArray()
             )->add(
-                'payment_postpay_number_installments',
-                'text',
-                TextFieldOption::make()
-                    ->label('Number of Installments')
-                    ->placeholder('3 by default')
-                    ->value(get_payment_setting('number_installments', 'postpay') ?? '')
-                    ->toArray()
+                'payment_postpay_installments_allowed',
+                'select',
+
+                SelectFieldOption::make()
+                    ->label('Allow Installments')
+                    ->choices([
+                        'true' => __('Yes'),
+                        'false' => __('No'),
+                    ])->toArray()
             );
     }
 }

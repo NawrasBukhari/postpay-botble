@@ -16,7 +16,6 @@ class PostpayController extends BaseController
      *
      *
      * @return BaseHttpResponse|string
-     *
      */
     public function getPaymentStatus(Request $request, BaseHttpResponse $response)
     {
@@ -34,7 +33,6 @@ class PostpayController extends BaseController
                     ->setMessage(__('Checkout failed! Please try again.'));
             }
 
-            // Perform action on payment processed
             do_action(PAYMENT_ACTION_PAYMENT_PROCESSED, [
                 'order_id' => (string)$order_id,
                 'status' => (string)PaymentStatusEnum::COMPLETED,
@@ -42,18 +40,16 @@ class PostpayController extends BaseController
                 'currency' => $capture['currency'],
                 'charge_id' => $capture['order_id'],
                 'payment_channel' => POSTPAY_PAYMENT_METHOD_NAME,
-                'customer_id' => $capture['customer']['id'],
-                'customer_type' => 'customer',
+                'customer_id' => $capture['customer']['id'] ?? $capture['customer']['customer_id'],
+                'customer_type' => 'Botble\Ecommerce\Models\Customer',
                 'payment_type' => 'direct',
             ], $request);
 
-            // Return success response
             return $response
                 ->setNextUrl(PaymentHelper::getRedirectURL())
                 ->setMessage(__('Checkout successfully!'));
 
-        } catch (\Exception $exception) {
-            
+        } catch (\Exception) {
             return $response
                 ->setError()
                 ->setNextUrl(PaymentHelper::getCancelURL())

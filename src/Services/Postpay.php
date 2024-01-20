@@ -17,9 +17,9 @@ class Postpay
     public function postpay(): PostpayBase
     {
         return new PostpayBase([
-            'merchant_id' => get_payment_setting('merchant_id', 'postpay'),
-            'secret_key' => get_payment_setting('secret_key', 'postpay'),
-            'sandbox' => !(app()->environment() === 'production'),
+            'merchant_id' => get_payment_setting('merchant_id', POSTPAY_PAYMENT_METHOD_NAME),
+            'secret_key' => get_payment_setting('secret_key', POSTPAY_PAYMENT_METHOD_NAME),
+            'sandbox' => '',
         ]);
     }
 
@@ -33,14 +33,14 @@ class Postpay
         try {
 
             $checkout = $this->postpay()->post($relativeUrl, $parameters);
-            if (! $checkout->isError()) {
+            if (!$checkout->isError()) {
                 return $checkout->json();
             }
 
             throw new RESTfulException($checkout->json()['fields']);
         } catch (RESTfulException|PostpayException $exception) {
             $this->setErrorMessage($exception->getMessage());
-            throw new PostpayException('[ Error Code: '.$exception->getErrorCode().' - And Message is: '.$exception->getMessage().']');
+            throw new PostpayException('[ Error Code: ' . $exception->getErrorCode() . ' - And Message is: ' . $exception->getMessage() . ']');
         }
     }
 
@@ -53,7 +53,7 @@ class Postpay
 
         $request = $this->postpay()->post($relativeUrl);
 
-        if (! $request->isError()) {
+        if (!$request->isError()) {
             return $request->json();
         }
 
@@ -66,11 +66,11 @@ class Postpay
      */
     public function getListTransactions(array $params): array
     {
-        $relativeUrl = '/transactions'.($params ? ('?'.http_build_query($params)) : '');
+        $relativeUrl = '/transactions' . ($params ? ('?' . http_build_query($params)) : '');
 
         $request = $this->postpay()->query($relativeUrl);
 
-        if (! $request->isError()) {
+        if (!$request->isError()) {
             return $request->json();
         }
 
