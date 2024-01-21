@@ -18,16 +18,20 @@ class PostpayPaymentMethodForm extends PaymentMethodForm
             ->setTitle('Postpay Payment Method')
             ->paymentId(POSTPAY_PAYMENT_METHOD_NAME)
             ->paymentName('Postpay')
-            ->paymentDescription('Customer can buy product and pay directly using Visa, Credit card via Postpay or even pay later.')
+            ->paymentDescription(
+                'Customer can buy product and pay directly using Visa, Credit card via Postpay or even pay later.'
+            )
             ->paymentLogo(url('vendor/core/plugins/postpay/images/postpay.svg'))
             ->paymentUrl('https://postpay.io')
-            ->paymentInstructions(Blade::render(<<<'BLADE'
+            ->paymentInstructions(
+                Blade::render(
+                    <<<'BLADE'
                 <ol>
                     <li>
                         <p>
                             <a
-                                href="https://postpay.io"
-                                target="_blank"
+                                href='https://postpay.io'
+                                target='_blank'
                             >
                                 {{ __('Register an account on :name', ['name' => 'Postpay']) }}
                             </a>
@@ -50,7 +54,8 @@ class PostpayPaymentMethodForm extends PaymentMethodForm
                     </li>
                 </ol>
             BLADE
-            ))
+                )
+            )
             ->add(
                 'payment_postpay_merchant_id',
                 TextField::class,
@@ -60,7 +65,6 @@ class PostpayPaymentMethodForm extends PaymentMethodForm
                     ->value(get_payment_setting('merchant_id', 'postpay') ?? '')
                     ->attributes(['data-counter' => 400])
                     ->toArray()
-
             )->add(
                 'payment_postpay_secret_key',
                 'password',
@@ -72,7 +76,6 @@ class PostpayPaymentMethodForm extends PaymentMethodForm
             )->add(
                 'payment_postpay_installments_allowed',
                 'select',
-
                 SelectFieldOption::make()
                     ->label('Allow Installments')
                     ->choices([
@@ -82,7 +85,6 @@ class PostpayPaymentMethodForm extends PaymentMethodForm
             )->add(
                 'payment_postpay_sandbox_enabled',
                 'select',
-
                 SelectFieldOption::make()
                     ->label(__('Sandbox Mode'))
                     ->helperText(__('Enable sandbox mode to test the payment method.'))
