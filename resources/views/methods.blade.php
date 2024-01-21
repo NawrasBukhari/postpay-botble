@@ -28,5 +28,13 @@
             @endif
         </div>
     </li>
+
+    <script>
+        $(document).ready(function() {
+            document.addEventListener('payment-form-reloaded', function () {
+                postpay.ui.refresh();
+            })
+        });
+    </script>
 @endif
 

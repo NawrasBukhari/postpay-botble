@@ -53,7 +53,8 @@ class Postpay
             throw new RESTfulException($checkout->json()['fields']);
         } catch (RESTfulException $exception) {
             $this->setErrorMessage($exception->getMessage());
-            throw new PostpayException('[ Error Code: '.$exception->getErrorCode().' - And Message is: '.$exception->getMessage().']');
+
+            throw new PostpayException('[ Error Code: ' . $exception->getErrorCode() . ' - And Message is: ' . $exception->getMessage() . ']');
         }
     }
 
@@ -83,7 +84,7 @@ class Postpay
      */
     public function getListTransactions(array $params): array
     {
-        $relativeUrl = '/transactions'.($params ? ('?'.http_build_query($params)) : '');
+        $relativeUrl = '/transactions' . ($params ? ('?' . http_build_query($params)) : '');
 
         $request = $this->postpay()->query($relativeUrl);
 

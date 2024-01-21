@@ -24,7 +24,7 @@ class PostpayController extends BaseController
 
             $capture = (new Postpay())->capture($request->get('order_id'));
             $status = strtolower(trim($capture['status']));
-            $order_id = $capture['order_id'];
+            $orderId = $capture['order_id'];
 
             if ($requestStatus !== 'approved' || $status !== 'captured') {
                 return $response
@@ -34,8 +34,8 @@ class PostpayController extends BaseController
             }
 
             do_action(PAYMENT_ACTION_PAYMENT_PROCESSED, [
-                'order_id' => (string) $order_id,
-                'status' => (string) PaymentStatusEnum::COMPLETED,
+                'order_id' => (string) $orderId,
+                'status' => PaymentStatusEnum::COMPLETED,
                 'amount' => $capture['total_amount'] / 100,
                 'currency' => $capture['currency'],
                 'charge_id' => $capture['order_id'],

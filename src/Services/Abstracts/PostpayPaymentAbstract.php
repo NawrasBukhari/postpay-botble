@@ -4,6 +4,7 @@ namespace NawrasBukhari\Postpay\Services\Abstracts;
 
 use Botble\Payment\Services\Traits\PaymentErrorTrait;
 use Botble\Support\Services\ProduceServiceInterface;
+use Exception;
 use Illuminate\Http\Request;
 use NawrasBukhari\Postpay\Services\Postpay;
 
@@ -40,7 +41,7 @@ abstract class PostpayPaymentAbstract implements ProduceServiceInterface
             if ($response['status']) {
                 return collect($response['data'])->firstWhere('reference', $payment->charge_id);
             }
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->setErrorMessageAndLogging($exception, 1);
 
             return false;
@@ -53,7 +54,7 @@ abstract class PostpayPaymentAbstract implements ProduceServiceInterface
     {
         try {
             return $this->makePayment($request);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->setErrorMessageAndLogging($exception, 1);
 
             return false;

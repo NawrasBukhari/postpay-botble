@@ -6,9 +6,11 @@ use Botble\Base\Facades\BaseHelper;
 use Botble\Base\Facades\Html;
 use Botble\Payment\Enums\PaymentMethodEnum;
 use Botble\Payment\Facades\PaymentMethods;
+use Exception;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use NawrasBukhari\Postpay\Forms\PostpayPaymentMethodForm;
 use NawrasBukhari\Postpay\Services\Gateways\PostpayPaymentService;
@@ -81,7 +83,7 @@ class HookServiceProvider extends ServiceProvider
 
     public function addPaymentSettings(?string $settings): string
     {
-        return $settings.PostpayPaymentMethodForm::create()->renderForm();
+        return $settings . PostpayPaymentMethodForm::create()->renderForm();
     }
 
     public function registerPostpayMethod(?string $html, array $data): string
@@ -112,7 +114,7 @@ class HookServiceProvider extends ServiceProvider
         $name = explode(' ', $orderAddress['name']);
         $firstName = $name[0];
         $lastName = $name[1];
-        $uniqueID = $orderId . '-' .uniqid();
+        $uniqueID = $orderId . '-' . uniqid();
         if (count($name) > 2) {
             $lastName = $name[2];
         }
@@ -138,7 +140,7 @@ class HookServiceProvider extends ServiceProvider
                 ],
 
                 'customer' => [
-                    'id' => (string) date('Ymd').mt_rand(100, 10000),
+                    'id' => (string) date('Ymd') . mt_rand(100, 10000),
                     'email' => $orderAddress['email'],
                     'first_name' => (string) $firstName,
                     'last_name' => (string) $lastName,
@@ -169,10 +171,10 @@ class HookServiceProvider extends ServiceProvider
                 header('Location: ' . $checkout['redirect_url']);
             }
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $data['error'] = true;
             $data['message'] = $e->getMessage() . ' At File ' . $e->getFile() . ' In Line ' . $e->getLine();
-            \Log::error($data['message']);
+            Log::error($data['message']);
 
             return $data;
         }
