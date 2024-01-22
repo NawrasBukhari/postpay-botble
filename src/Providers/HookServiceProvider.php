@@ -7,7 +7,6 @@ use Botble\Base\Facades\Html;
 use Botble\Payment\Enums\PaymentMethodEnum;
 use Botble\Payment\Facades\PaymentMethods;
 use Exception;
-use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
@@ -95,9 +94,6 @@ class HookServiceProvider extends ServiceProvider
         return $html;
     }
 
-    /**
-     * @throws BindingResolutionException
-     */
     public function checkoutWithPostpay(array $data, Request $request): array
     {
         if ($data['type'] !== POSTPAY_PAYMENT_METHOD_NAME) {
@@ -121,36 +117,36 @@ class HookServiceProvider extends ServiceProvider
 
         try {
             $params = [
-                'order_id' => (string) $uniqueID,
-                'total_amount' => (float) toDecimal($paymentData['amount']),
-                'currency' => (string) $paymentData['currency'],
-                'tax_amount' => (float) toDecimal($taxAmount),
-                'num_instalments' => (int) $numInstallments,
+                'order_id' => (string)$uniqueID,
+                'total_amount' => (float)toDecimal($paymentData['amount']),
+                'currency' => (string)$paymentData['currency'],
+                'tax_amount' => (float)toDecimal($taxAmount),
+                'num_instalments' => (int)$numInstallments,
                 'shipping' => [
-                    'id' => (string) $uniqueID,
-                    'name' => (string) $paymentData['shipping_method'],
-                    'amount' => (float) toDecimal(40),
+                    'id' => (string)$uniqueID,
+                    'name' => (string)$paymentData['shipping_method'],
+                    'amount' => (float)toDecimal(40),
                     'address' => [
-                        'first_name' => (string) $firstName,
-                        'last_name' => (string) $lastName,
-                        'line1' => (string) $orderAddress['address'],
-                        'city' => (string) 'Dubai',
-                        'country' => (string) 'AE',
+                        'first_name' => (string)$firstName,
+                        'last_name' => (string)$lastName,
+                        'line1' => (string)$orderAddress['address'],
+                        'city' => (string)'Dubai',
+                        'country' => (string)'AE',
                     ],
                 ],
 
                 'customer' => [
-                    'id' => (string) date('Ymd') . mt_rand(100, 10000),
+                    'id' => (string)date('Ymd') . mt_rand(100, 10000),
                     'email' => $orderAddress['email'],
-                    'first_name' => (string) $firstName,
-                    'last_name' => (string) $lastName,
+                    'first_name' => (string)$firstName,
+                    'last_name' => (string)$lastName,
                 ],
                 'items' => [
                     [
-                        'reference' => (string) $uniqueID,
-                        'name' => (string) $paymentData['products'][0]['name'],
-                        'unit_price' => (float) toDecimal($paymentData['products'][0]['price']),
-                        'qty' => (int) $paymentData['products'][0]['qty'],
+                        'reference' => (string)$uniqueID,
+                        'name' => (string)$paymentData['products'][0]['name'],
+                        'unit_price' => (float)toDecimal($paymentData['products'][0]['price']),
+                        'qty' => (int)$paymentData['products'][0]['qty'],
                     ],
                 ],
 

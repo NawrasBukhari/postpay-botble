@@ -10,6 +10,15 @@ class PostpayServiceProvider extends ServiceProvider
 {
     use LoadAndPublishDataTrait;
 
+    public function register(): void
+    {
+        if (!class_exists('Postpay\Postpay')) {
+            if (file_exists(__DIR__ . '/../../vendor/autoload.php')) {
+                require __DIR__ . '/../../vendor/autoload.php';
+            }
+        }
+    }
+
     public function boot(): void
     {
         $this
@@ -44,14 +53,14 @@ class PostpayServiceProvider extends ServiceProvider
                     return true;
                 }
 
-                return is_object($value) && (string) $value === (string) $needle;
+                return is_object($value) && (string)$value === (string)$needle;
             });
     }
 
     /**
      * We have a function called get_active_plugins() which return array of active plugins.
      *
-     * @param  string  $plugin in @Botble CMS
+     * @param string $plugin in @Botble CMS
      */
     private function isActivePlugin(string $plugin): bool|string
     {

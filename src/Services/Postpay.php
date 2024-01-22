@@ -36,8 +36,8 @@ class Postpay
     /**
      * @param $parameters array
      *
+     * @return array
      * @throws PostpayException This function is used to create a checkout
-     *
      * @check https://docs.postpay.io/v1/#checkout
      */
     public function checkout(array $parameters): array
@@ -46,7 +46,7 @@ class Postpay
 
         try {
             $checkout = $this->postpay()->post(path: $relativeUrl, params: $parameters);
-            if (! $checkout->isError()) {
+            if (!$checkout->isError()) {
                 return $checkout->json();
             }
 
@@ -67,15 +67,24 @@ class Postpay
      */
     public function capture($order_id): array
     {
-        $relativeUrl = "/orders/$order_id/capture";
+        try {
+            $relativeUrl = "/orders/$order_id/capture";
 
-        $request = $this->postpay()->post($relativeUrl);
+            $request = $this->postpay()->post($relativeUrl);
 
-        if (! $request->isError()) {
-            return $request->json();
+            if (!$request->isError()) {
+                return $request->json();
+            }
+
+            throw new RESTfulException($request);
+        } catch (RESTfulException $exception) {
+            if (postpaySandboxStatus()) {
+                $this->setErrorMessage($exception->getMessage());
+            }
+
+            throw new PostpayException($exception->getErrorCode() . ' ' . $exception->getMessage());
         }
 
-        throw new RESTfulException($request);
     }
 
     /**
@@ -88,7 +97,7 @@ class Postpay
 
         $request = $this->postpay()->query($relativeUrl);
 
-        if (! $request->isError()) {
+        if (!$request->isError()) {
             return $request->json();
         }
 
